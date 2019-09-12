@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 type addressBook struct {
@@ -18,14 +19,29 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to the HomePage!")
 }
 
-func getAddresBookAll(w http.ResponseWriter, r *http.Request) {
+func getAddressBookAll(w http.ResponseWriter, r *http.Request) {
 	addBook := addressBook{
 		Firstname: "Bundit",
 		Lastname:  "Wisedphanit",
-		Code:      1988,
-		Phone:     "0851072564",
+		Code:      001,
+		Phone:     "08x-xxx-xxxx",
 	}
 	json.NewEncoder(w).Encode(addBook)
+}
+
+func getAvailableHarddiskSpace(w http.ResponseWriter, r *http.Request) {
+	var result string
+	var available string
+	query := r.URL.Query()
+	size := query.Get("size")
+	if size != "" {
+		realSize, err := strconv.Atoi(size)
+		if err == nil {
+			available = strconv.Itoa(realSize * 1000 * 1000 * 1000 / 1024 / 1024 / 1024)
+		}
+	}
+	result = fmt.Sprintf("Hardisk Size %s available space : %s", size, available)
+	json.NewEncoder(w).Encode(result)
 }
 
 func getPort() string {
@@ -39,7 +55,8 @@ func getPort() string {
 
 func handleRequest() {
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/getAddres", getAddresBookAll)
+	http.HandleFunc("/getAddress", getAddressBookAll)
+	http.HandleFunc("/getAvailableHarddiskSpace", getAvailableHarddiskSpace)
 	http.ListenAndServe(getPort(), nil)
 }
 
