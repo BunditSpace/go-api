@@ -15,11 +15,11 @@ type addressBook struct {
 	Phone     string
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
+func HomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Welcome to the HomePage!")
 }
 
-func getAddressBookAll(w http.ResponseWriter, r *http.Request) {
+func GetAddressBookAll(w http.ResponseWriter, r *http.Request) {
 	addBook := addressBook{
 		Firstname: "Bundit",
 		Lastname:  "Wisedphanit",
@@ -29,7 +29,7 @@ func getAddressBookAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(addBook)
 }
 
-func getAvailableHarddiskSpace(w http.ResponseWriter, r *http.Request) {
+func GetAvailableHarddiskSpace(w http.ResponseWriter, r *http.Request) {
 	var result string
 	var available string
 	query := r.URL.Query()
@@ -54,9 +54,9 @@ func getPort() string {
 }
 
 func handleRequest() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/getAddress", getAddressBookAll)
-	http.HandleFunc("/getAvailableHarddiskSpace", getAvailableHarddiskSpace)
+	http.HandleFunc("/", HomePage)
+	http.HandleFunc("/getAddress", GetAddressBookAll)
+	http.HandleFunc("/getAvailableHarddiskSpace", GetAvailableHarddiskSpace)
 	http.ListenAndServe(getPort(), nil)
 }
 
